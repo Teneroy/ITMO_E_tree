@@ -39,21 +39,17 @@ namespace childlist {
             next = -1;
             child = nullptr;
         };
-        node(char l, int n, child_list * c):label(l),next(n)
-        {
-            child = c;
-        };
     };
 
     class Tree {
     public:
         Tree();
         ~Tree();
-        int parent(int n);
-        char label(int n);
-        int root();
-        int leftmost_child(int n);
-        int right_sibling(int n);
+        int parent(int n) const;
+        char label(int n) const;
+        int root() const;
+        int leftmost_child(int n) const;
+        int right_sibling(int n) const;
         Tree& create(char label);
         Tree& create(char label, Tree t1);
         Tree& create(char label, Tree t1, Tree t2);
@@ -65,8 +61,8 @@ namespace childlist {
         static node _arr[AR_SIZE];
         static int _space;
         void setRoot(char label); //Создание корня дерева
-        int searchParent(int n, int cur);
-        void deleteTree(int n);
+        int searchParent(int n, int cur) const; //Функция поиска родителя
+        void deleteTree(int n);  //Функция удаления дерева
     };
 }
 
@@ -78,7 +74,7 @@ namespace lcrs {
     {
         int left_child; //Левый сын
         int right_sibling; //Правый брат
-        int next;
+        int next; //Дополнительное поле, используется в фейковом объекте
         char label; //Метка
         node()
         {
@@ -87,32 +83,29 @@ namespace lcrs {
             label = '\0';
             next = -1;
         };
-        node(int l, int r, char lb):left_child(l),right_sibling(r),label(lb)
-        {};
     };
 
     class Tree {
     public:
         Tree();
-        int parent(int n);
-        char label(int n);
-        int leftmost_child(int n);
-        int right_sibling(int n);
+        int parent(int n) const;
+        char label(int n) const;
+        int leftmost_child(int n) const;
+        int right_sibling(int n) const;
         Tree& create(char label);
         Tree& create(char label, Tree t1);
         Tree& create(char label, Tree t1, Tree t2);
         void makenull();
         void print();
-        int root();
+        int root() const;
         static void InitArr();
     private:
         int _tpos;//Позиция корня дерева
         static node _arr[AR_SIZE];
         static int _space;
         void setRoot(char label);//Создание корня дерева
-        int searchParent(int n, int cur);//Функция поиска родителя элемента
-        int searchSub(int st, int check, int current, int n);//Дополнительная функция(используется в searchParent)
-        void deleteTree(int n);
+        int searchParent(int n, int cur) const;//Функция поиска родителя
+        void deleteTree(int n); //Фунция удаления дерева
     };
 }
 
