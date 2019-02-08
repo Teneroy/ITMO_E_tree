@@ -51,10 +51,10 @@ namespace childlist {
         int leftmost_child(int n) const;
         int right_sibling(int n) const;
         Tree& create(char label);
-        Tree& create(char label, Tree t1);
-        Tree& create(char label, Tree t1, Tree t2);
+        Tree& create(char label, Tree & t1);
+        Tree& create(char label, Tree & t1, Tree & t2);
         void makenull();
-        void print();
+        void print() const;
         static void InitArr();
     private:
         int _tpos; //Позиция корня дерева
@@ -93,10 +93,10 @@ namespace lcrs {
         int leftmost_child(int n) const;
         int right_sibling(int n) const;
         Tree& create(char label);
-        Tree& create(char label, Tree t1);
-        Tree& create(char label, Tree t1, Tree t2);
+        Tree& create(char label, Tree & t1);
+        Tree& create(char label, Tree & t1, Tree & t2);
         void makenull();
-        void print();
+        void print() const;
         int root() const;
         static void InitArr();
     private:

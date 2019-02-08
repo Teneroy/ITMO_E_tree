@@ -37,22 +37,28 @@ childlist::Tree& childlist::Tree::create(char label)
     return *this;
 }
 
-childlist::Tree& childlist::Tree::create(char label, Tree t1)
+childlist::Tree& childlist::Tree::create(char label, Tree & t1)
 {
-    setRoot(label); //Установить корень дерева
-    Tree::_arr[_tpos].child = new child_list(t1._tpos, nullptr); //Создать список сыновей
-    t1._tpos = EMPTY; //Обнулить скопированное дерево
+    if(t1._tpos != EMPTY) //Если корень дерева не пустой
+    {
+        setRoot(label); //Установить корень дерева
+        Tree::_arr[_tpos].child = new child_list(t1._tpos, nullptr); //Создать список сыновей
+        t1._tpos = EMPTY; //Обнулить скопированное дерево
+    }
     return *this;
 }
 
-childlist::Tree& childlist::Tree::create(char label, Tree t1, Tree t2)
+childlist::Tree& childlist::Tree::create(char label, Tree & t1, Tree & t2)
 {
     setRoot(label);
-    child_list * temp;
-    temp = new child_list(t2._tpos, nullptr);//Создать правое поддерево
-    Tree::_arr[_tpos].child = new child_list(t1._tpos, temp);//Создать список сыновей
-    t1._tpos = EMPTY;//Обнулить скопированное дерево
-    t2._tpos = EMPTY;//Обнулить скопированное дерево
+    if(t1._tpos != EMPTY && t2._tpos != EMPTY) //Если корни первого и второго дерева не пустые
+    {
+        child_list * temp;
+        temp = new child_list(t2._tpos, nullptr);//Создать правое поддерево
+        Tree::_arr[_tpos].child = new child_list(t1._tpos, temp);//Создать список сыновей
+        t1._tpos = EMPTY;//Обнулить скопированное дерево
+        t2._tpos = EMPTY;//Обнулить скопированное дерево
+    }
     return *this;
 }
 
@@ -180,7 +186,7 @@ void childlist::Tree::makenull()
     _tpos = EMPTY; //Зануляем корень дерева
 }
 
-void childlist::Tree::print()
+void childlist::Tree::print() const
 {
 //    std::cout << std::setw(5) << "i ";
 //    std::cout << std::setw(5) << "data ";
@@ -240,21 +246,27 @@ lcrs::Tree& lcrs::Tree::create(char label)
     return *this;
 }
 
-lcrs::Tree& lcrs::Tree::create(char label, Tree t1)
+lcrs::Tree& lcrs::Tree::create(char label, Tree & t1)
 {
     setRoot(label);
-    Tree::_arr[_tpos].left_child = t1._tpos;
-    t1._tpos = -1;
+    if(t1._tpos != EMPTY)
+    {
+        Tree::_arr[_tpos].left_child = t1._tpos;
+        t1._tpos = EMPTY;
+    }
     return *this;
 }
 
-lcrs::Tree& lcrs::Tree::create(char label, Tree t1, Tree t2)
+lcrs::Tree& lcrs::Tree::create(char label, Tree & t1, Tree & t2)
 {
     setRoot(label);
-    Tree::_arr[_tpos].left_child = t1._tpos;
-    Tree::_arr[Tree::_arr[_tpos].left_child].right_sibling = t2._tpos;
-    t1._tpos = EMPTY;
-    t2._tpos = EMPTY;
+    if(t1._tpos != EMPTY && t2._tpos != EMPTY)
+    {
+        Tree::_arr[_tpos].left_child = t1._tpos;
+        Tree::_arr[Tree::_arr[_tpos].left_child].right_sibling = t2._tpos;
+        t1._tpos = EMPTY;
+        t2._tpos = EMPTY;
+    }
     return *this;
 }
 
@@ -313,7 +325,7 @@ int lcrs::Tree::parent(int n) const
     return par;
 }
 
-void lcrs::Tree::print()
+void lcrs::Tree::print() const
 {
     for (int i = 0; i < AR_SIZE; ++i)
     {
