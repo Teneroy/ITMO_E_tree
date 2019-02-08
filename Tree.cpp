@@ -33,31 +33,57 @@ childlist::Tree::~Tree()
 
 childlist::Tree& childlist::Tree::create(char label)
 {
+    if(_tpos != EMPTY)
+    {
+        deleteTree(_tpos);
+    }
     setRoot(label); //Установить корень дерева
     return *this;
 }
 
 childlist::Tree& childlist::Tree::create(char label, Tree & t1)
 {
-    if(t1._tpos != EMPTY) //Если корень дерева не пустой
+    if(_tpos != EMPTY)
+    {
+        deleteTree(_tpos);
+    }
+    if(t1._tpos != _tpos)
     {
         setRoot(label); //Установить корень дерева
-        Tree::_arr[_tpos].child = new child_list(t1._tpos, nullptr); //Создать список сыновей
-        t1._tpos = EMPTY; //Обнулить скопированное дерево
+        if(t1._tpos != EMPTY) //Если корень дерева не пустой
+        {
+            Tree::_arr[_tpos].child = new child_list(t1._tpos, nullptr); //Создать список сыновей
+            t1._tpos = EMPTY; //Обнулить скопированное дерево
+        }
     }
     return *this;
 }
 
 childlist::Tree& childlist::Tree::create(char label, Tree & t1, Tree & t2)
 {
-    setRoot(label);
-    if(t1._tpos != EMPTY && t2._tpos != EMPTY) //Если корни первого и второго дерева не пустые
+    if(_tpos != EMPTY)
     {
-        child_list * temp;
-        temp = new child_list(t2._tpos, nullptr);//Создать правое поддерево
-        Tree::_arr[_tpos].child = new child_list(t1._tpos, temp);//Создать список сыновей
-        t1._tpos = EMPTY;//Обнулить скопированное дерево
-        t2._tpos = EMPTY;//Обнулить скопированное дерево
+        deleteTree(_tpos);
+    }
+    if(t1._tpos != _tpos || t2._tpos != _tpos)
+    {
+        setRoot(label);
+        if(t1._tpos != EMPTY && t1._tpos != _tpos)
+        {
+            Tree::_arr[_tpos].child = new child_list(t1._tpos, nullptr);//Создать список сыновей
+            t1._tpos = EMPTY;
+        }
+        if(t2._tpos != EMPTY && t2._tpos != _tpos)
+        {
+            if(Tree::_arr[_tpos].child != nullptr)
+            {
+                Tree::_arr[_tpos].child -> next = new child_list(t2._tpos, nullptr);
+            } else
+            {
+                Tree::_arr[_tpos].child = new child_list(t2._tpos, nullptr);
+            }
+            t2._tpos = EMPTY;
+        }
     }
     return *this;
 }
@@ -162,12 +188,12 @@ void childlist::Tree::deleteTree(int n)
 {
     if(Tree::_arr[n].child != nullptr) //Если сыновья существуют
     {
+        deleteTree(Tree::_arr[n].child -> position); //Ищем в левом поддереве
         if(Tree::_arr[n].child -> next != nullptr) //Если правый сын существует
         {
             deleteTree(Tree::_arr[n].child -> next -> position); //Ищем в правом поддереве
             delete Tree::_arr[n].child -> next;  //Удалить правый узел
         }
-        deleteTree(Tree::_arr[n].child -> position); //Ищем в левом поддереве
         delete Tree::_arr[n].child; //Удаляем левого сына
         Tree::_arr[n].child = nullptr;
     }
@@ -248,9 +274,9 @@ lcrs::Tree& lcrs::Tree::create(char label)
 
 lcrs::Tree& lcrs::Tree::create(char label, Tree & t1)
 {
-    setRoot(label);
-    if(t1._tpos != EMPTY)
+    if(t1._tpos != EMPTY && t1._tpos != _tpos)
     {
+        setRoot(label);
         Tree::_arr[_tpos].left_child = t1._tpos;
         t1._tpos = EMPTY;
     }
@@ -259,9 +285,9 @@ lcrs::Tree& lcrs::Tree::create(char label, Tree & t1)
 
 lcrs::Tree& lcrs::Tree::create(char label, Tree & t1, Tree & t2)
 {
-    setRoot(label);
-    if(t1._tpos != EMPTY && t2._tpos != EMPTY)
+    if(t1._tpos != EMPTY && t2._tpos != EMPTY && t1._tpos != _tpos && t2._tpos != _tpos)
     {
+        setRoot(label);
         Tree::_arr[_tpos].left_child = t1._tpos;
         Tree::_arr[Tree::_arr[_tpos].left_child].right_sibling = t2._tpos;
         t1._tpos = EMPTY;
@@ -339,8 +365,11 @@ void lcrs::Tree::print() const
 
 void lcrs::Tree::makenull()
 {
-    deleteTree(_tpos); //Уаляем дерево
-    _tpos = -1;//Зануляем корень дерева
+    if(_tpos != EMPTY)
+    {
+        deleteTree(_tpos); //Уаляем дерево
+        _tpos = EMPTY;//Зануляем корень дерева
+    }
 }
 
 int lcrs::Tree::searchParent(int n, int cur) const
