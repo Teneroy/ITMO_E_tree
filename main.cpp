@@ -3,7 +3,7 @@
 //
 
 #include "Tree.h"
-using namespace childlist;
+using namespace lcrs;
 node err;
 
 void traversal(Tree & t, int n)
@@ -44,6 +44,24 @@ int main()
     Tree t2;
     Tree t3;
     Tree t4;
+
+//    t4.create('k');
+//    t2.create('a');
+//    t3.create('b');
+//    t1.create('c', t2, t3);
+    //t1.print();
+//    t2.create('o');
+    //t4.create('n', t1, t2);
+    //t4.create('n', t4, t2);
+    //t4.create('n', t4, t4);
+    //t4.create('n', t1, t2);
+    //t4.create('n', t4, t2);
+    //t4.create('n', t4, t4);
+//    t2.makenull();
+    //t4.create('n', t1, t2);
+    //t4.create('n', t4, t2);
+//    t4.create('n', t4, t4);
+//    t4.print();
 
     t2.create('a');
     t3.create('b');

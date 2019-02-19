@@ -36,7 +36,7 @@ namespace childlist {
         node()
         {
             label = '\0';
-            next = -1;
+            next = EMPTY;
             child = nullptr;
         };
     };
