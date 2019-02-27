@@ -11,7 +11,7 @@
 
 namespace childlist {
 
-    enum {AR_SIZE = 15, EMPTY = -1}; //Размер массива, пустое ли дерево
+    enum {AR_SIZE = 15, EMPTY = -1, ERR = -100}; //Размер массива, пустое ли дерево
 
     struct child_list //Список детей
     {
@@ -36,7 +36,7 @@ namespace childlist {
         node()
         {
             label = '\0';
-            next = EMPTY;
+            next = -1;
             child = nullptr;
         };
     };
@@ -68,20 +68,18 @@ namespace childlist {
 
 namespace lcrs {
 
-    enum {AR_SIZE = 15, EMPTY = -1};
+    enum {AR_SIZE = 15, EMPTY = -1, ERR = -100};
 
     struct node
     {
         int left_child; //Левый сын
         int right_sibling; //Правый брат
-        int next; //Дополнительное поле, используется в фейковом объекте
         char label; //Метка
         node()
         {
             left_child = EMPTY;
             right_sibling = EMPTY;
             label = '\0';
-            next = -1;
         };
     };
 

@@ -6,7 +6,6 @@
 
 int childlist::Tree::_space = 0;
 childlist::node childlist::Tree::_arr[AR_SIZE];
-childlist::node error;
 
 void childlist::Tree::InitArr()
 {
@@ -14,6 +13,9 @@ void childlist::Tree::InitArr()
     {
         if(i != AR_SIZE - 1) { //Если не конец строки
             Tree::_arr[i].next = i + 1; //Указываем на следующи элемент
+        } else
+        {
+            Tree::_arr[i].next = EMPTY;
         }
     }
 }
@@ -96,7 +98,7 @@ char childlist::Tree::label(int n) const
     {
         if(searchParent(n, _tpos) == EMPTY) //Если узла нету в дереве
         {
-            return error.label; //Вернуть фейковый элемент
+            return '\0'; //Вернуть фейковый элемент
         }
     }
     return Tree::_arr[n].label;
@@ -108,34 +110,38 @@ int childlist::Tree::leftmost_child(int n) const
     {
         if(searchParent(n, _tpos) == EMPTY)//Если узла нету в дереве
         {
-            return error.next; //Вернуть фейковый элемент
+            return ERR; //Вернуть фейковый элемент
         }
     }
-    node temp = Tree::_arr[n]; //Создаем итератор
+
     int i_temp = EMPTY;
-    while(temp.child != nullptr) //Спускаемся вниз до самого левого элемента
+    if(Tree::_arr[n].child != nullptr)
+        i_temp = Tree::_arr[n].child -> position;
+
+    if(Tree::_arr[i_temp].child == nullptr)
     {
-        i_temp = temp.child -> position; //Записываем позицию узла левого поддерева
-        temp = Tree::_arr[temp.child -> position];
+        return i_temp;
+    } else
+    {
+        return leftmost_child(i_temp);
     }
-    return i_temp; //Возвращаем самый левый узел
 }
 
 int childlist::Tree::right_sibling(int n) const
 {
     if(n == _tpos) //Если позиция  является корнем дерева
     {
-        return error.next; //Вернуть фейковый элемент
+        return ERR; //Вернуть фейковый элемент
     } else
     {
         int par = searchParent(n, _tpos);
         if(par == EMPTY)//Если узла нету в дереве
         {
-            return error.next;//Вернуть фейковый элемент
+            return ERR;//Вернуть фейковый элемент
         }
         if(Tree::_arr[par].child -> next == nullptr)
         {
-            return error.next; //Вернуть фейковый элемент
+            return ERR; //Вернуть фейковый элемент
         }
         return Tree::_arr[par].child -> next -> position;
     }
@@ -146,7 +152,7 @@ int childlist::Tree::parent(int n) const
     int sp = searchParent(n, _tpos);
     if(sp == EMPTY)//Если узла нету в дереве
     {
-        return error.next;//Вернуть фейковый элемент
+        return ERR;//Вернуть фейковый элемент
     }
     return sp;
 }
@@ -216,10 +222,6 @@ void childlist::Tree::makenull()
 
 void childlist::Tree::print() const
 {
-//    std::cout << std::setw(5) << "i ";
-//    std::cout << std::setw(5) << "data ";
-//    std::cout << std::setw(5) << "next ";
-//    std::cout << std::setw(5) << "chi " << std::endl;
     for (int i = 0; i < AR_SIZE; ++i)
     {
         std::cout << std::setw(5) << i << " ";
@@ -251,7 +253,6 @@ void childlist::Tree::setRoot(char label)
 
 int lcrs::Tree::_space = 0;
 lcrs::node lcrs::Tree::_arr[AR_SIZE];
-lcrs::node error_r;
 
 void lcrs::Tree::InitArr()
 {
@@ -338,7 +339,7 @@ char lcrs::Tree::label(int n) const
     {
         if(searchParent(n, _tpos) == EMPTY) //Если узла нету в дереве
         {
-            return error_r.label;//Вернуть фейковый элемент
+            return '\0';//Вернуть фейковый элемент
         }
     }
     return Tree::_arr[n].label;
@@ -350,39 +351,47 @@ int lcrs::Tree::leftmost_child(int n) const
     {
         if(searchParent(n, _tpos) == EMPTY) //Если узла нету в дереве
         {
-            return error_r.next;//Вернуть фейковый элемент
+            return ERR;//Вернуть фейковый элемент
         }
     }
-    int iter = Tree::_arr[n].left_child; //Создаем итератор
-    while(iter != EMPTY) //Гоним самого левого элемента
+    int iter = Tree::_arr[n].left_child;
+    if(Tree::_arr[iter].left_child == EMPTY)
     {
-        if(Tree::_arr[iter].left_child) //Если левый сын существует следующего узла
-            return iter; //Вернуть итератор
-        iter = Tree::_arr[iter].left_child;
+        return iter;
+    } else
+    {
+        return leftmost_child(iter);
     }
-    return iter;
 }
 
 int lcrs::Tree::right_sibling(int n) const
 {
     if(n == _tpos)//Если позиция является корнем дерева
     {
-        return error_r.next;//Вернуть фейковый элемент
+        return ERR;//Вернуть фейковый элемент
     }
     int par = searchParent(n, _tpos);
     if (par == EMPTY)
     {
-        return error_r.next;//Вернуть фейковый элемент
+        return ERR;//Вернуть фейковый элемент
+    }
+    if(Tree::_arr[n].right_sibling == EMPTY)
+    {
+        return ERR;
     }
     return Tree::_arr[n].right_sibling;
 }
 
 int lcrs::Tree::parent(int n) const
 {
+    if(n == _tpos) //Если узла нету в дереве
+    {
+        return ERR;//Вернуть фейковый элемент
+    }
     int par = searchParent(n, _tpos);
     if(par == EMPTY) //Если узла нету в дереве
     {
-        return error_r.next;//Вернуть фейковый элемент
+        return ERR;//Вернуть фейковый элемент
     }
     return par;
 }
